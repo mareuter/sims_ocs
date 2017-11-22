@@ -69,7 +69,8 @@ class MainObservatoryTest(unittest.TestCase):
         self.assertEqual(self.observatory.slew_history.slewDistance, 3.1621331347877555)
         self.assertEqual(len(self.observatory.slew_activities_list), 9)
         self.assertEqual(self.observatory.slew_activities_done, 9)
-        self.assertEqual(self.observatory.slew_activities_list[0].activity, "telopticsclosedloop")
+        slew_activities_list = [x.activity for x in self.observatory.slew_activities_list]
+        self.assertTrue("telopticsclosedloop" in slew_activities_list)
         self.assertEqual(self.observatory.slew_maxspeeds.domeAltSpeed, -1.75)
         self.assertEqual(self.observatory.slew_maxspeeds.telAzSpeed, -7.0)
 
