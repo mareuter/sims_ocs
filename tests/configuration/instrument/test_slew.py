@@ -14,5 +14,5 @@ class SlewTest(unittest.TestCase):
         self.assertEqual(len(self.slew.prereq_readout), 0)
 
     def test_string_setting(self):
-        self.slew_conf.prereq_tel_settle = self.slew.get_string_rep("prereq_telsettle")
-        self.assertEqual(self.slew_conf.prereq_tel_settle, "telalt,telaz")
+        self.slew_conf.prereq_telsettle = self.slew.get_string_rep("prereq_telsettle")
+        self.assertEqual(self.slew_conf.prereq_telsettle, "telalt,telaz")

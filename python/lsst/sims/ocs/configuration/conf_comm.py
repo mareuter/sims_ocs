@@ -120,7 +120,7 @@ class ConfigurationCommunicator(object):
         self.rot_conf.maxspeed = self.config.observatory.rotator.maxspeed
         self.rot_conf.accel = self.config.observatory.rotator.accel
         self.rot_conf.decel = self.config.observatory.rotator.decel
-        self.rot_conf.follow_sky = self.config.observatory.rotator.follow_sky
+        self.rot_conf.followsky = self.config.observatory.rotator.follow_sky
         self.rot_conf.resume_angle = self.config.observatory.rotator.resume_angle
 
     def _configure_camera(self):
