@@ -58,7 +58,7 @@ class SimulatorTest(unittest.TestCase):
         return topic()
 
     def test_basic_information_after_creation(self):
-        self.assertEqual(self.sim.duration, 183.0)
+        self.assertEqual(self.sim.duration, 182.0)
         self.assertEqual(self.sim.time_handler.initial_timestamp, self.starting_timestamp)
         self.assertIsNotNone(self.sim.obs_site_info)
 
