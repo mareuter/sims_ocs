@@ -138,7 +138,7 @@ class Simulator(object):
             for i in range(topic.num_proposals):
                 self.db.append_data("observation_proposal_history",
                                     ObsProposalHistory(self.observation_proposals_counted,
-                                                       topic.proposal_Ids[i],
+                                                       int(topic.proposal_Ids[i]),
                                                        topic.proposal_values[i],
                                                        topic.proposal_needs[i],
                                                        topic.proposal_bonuses[i],
@@ -149,7 +149,7 @@ class Simulator(object):
             for i in range(topic.num_proposals):
                 self.db.append_data("target_proposal_history",
                                     TargetProposalHistory(self.target_proposals_counted,
-                                                          topic.proposal_Ids[i],
+                                                          int(topic.proposal_Ids[i]),
                                                           topic.proposal_values[i],
                                                           topic.proposal_needs[i],
                                                           topic.proposal_bonuses[i],
