@@ -1,7 +1,9 @@
 from builtins import object
 from builtins import range
+from array import array
 import logging
 import numpy
+import sys
 
 from lsst.sims.ocs.observatory import MainObservatory
 from lsst.sims.ocs.setup import LoggingLevel
@@ -251,3 +253,46 @@ class Sequencer(object):
             The survey duration in days.
         """
         self.observatory_model.start_night(night, duration)
+
+    def set_topic(self, th, sky_brightness_filters):
+        """Set the sky brightness information into the topic. We will be
+        broadcasting the entire sky's sky brightness using the opsim fields. 
+        In other words, 5292 floating point values for all 5 filters 
+        [u,g,r,i,z,y].
+
+        Parameters
+        ----------
+        th : :class:`TimeHandler`
+            A time handling instance.
+        sky_brightness_filters : A dictionary of filters as keys and 
+            SALPY_scheduler.scheduler_skyBrightness topics as values. So that we
+            can iterate through this dictionary and the skymap filters in the 
+            same loop. 
+        """
+        fields = numpy.arange(1,5293)
+        skymap = self.sky_model.get_sky_brightness(fields, extrapolate=True,
+                                                         override_exclude_planets=False)
+
+        for filter in skymap:
+
+            tempByteArray = array("H")
+
+            f_min = min(i for i in skymap[filter] if i > 0)
+            f_max = numpy.max(skymap[filter])
+            SCALE = round(255 / (f_min - f_max),2)
+            ZERO = round(f_max,2)
+
+            sky_brightness_filters[filter].timestamp = th.current_timestamp
+            sky_brightness_filters[filter].scale = SCALE
+            sky_brightness_filters[filter].zero = ZERO
+
+            for val in range(len(skymap[filter])):
+
+                if skymap[filter][val] < 0:
+                    tempByteArray.append(0)
+                    continue
+                else:
+                    originalFloat = skymap[filter][val]
+                    uint = int((originalFloat-ZERO) * SCALE)
+                    # print("SEQUENCER::SKYMAP::" + str(filter)+"::" + str(val) + " " + str(uint))
+                    sky_brightness_filters[filter].sky_brightness[val] = uint

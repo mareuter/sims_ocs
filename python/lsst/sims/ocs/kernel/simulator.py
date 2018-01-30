@@ -192,6 +192,12 @@ class Simulator(object):
         self.target = self.sal.set_subscribe_topic("target")
         self.cloud = self.sal.set_publish_topic("cloud")
         self.seeing = self.sal.set_publish_topic("seeing")
+        self.sky_brightnessU = self.sal.set_publish_topic("skyBrightnessU")
+        self.sky_brightnessG = self.sal.set_publish_topic("skyBrightnessG")
+        self.sky_brightnessR = self.sal.set_publish_topic("skyBrightnessR")
+        self.sky_brightnessI = self.sal.set_publish_topic("skyBrightnessI")
+        self.sky_brightnessZ = self.sal.set_publish_topic("skyBrightnessZ")
+        self.sky_brightnessY = self.sal.set_publish_topic("skyBrightnessY")
         self.filter_swap = self.sal.set_subscribe_topic("filterSwap")
         self.interested_proposal = self.sal.set_subscribe_topic("interestedProposal")
         self.log.info("Finishing simulation initialization")
@@ -207,6 +213,10 @@ class Simulator(object):
         self.save_field_information()
 
         self.log.debug("Duration = {}".format(self.duration))
+
+        # Time constraint for resource consuming skybrightness publishing
+        lastUpdate = self.time_handler.current_timestamp
+
         for night in range(1, int(self.duration) + 1):
             self.start_night(night)
 
@@ -227,6 +237,33 @@ class Simulator(object):
 
                 self.seeing_model.set_topic(self.time_handler, self.seeing)
                 self.sal.put(self.seeing)
+
+                # Time constraint mechanism
+                diff = self.time_handler.current_timestamp - lastUpdate
+                if ( diff > 600 ):
+                    
+                    # print(str(self.time_handler.current_timestamp) + " " + str(lastUpdate) + " = " + str(diff))
+                    lastUpdate = self.time_handler.current_timestamp
+                    sky_brightness_filters = {'u': self.sky_brightnessU,
+                                              'g': self.sky_brightnessG,
+                                              'r': self.sky_brightnessR,
+                                              'i': self.sky_brightnessI,
+                                              'z': self.sky_brightnessZ,
+                                              'y': self.sky_brightnessY}
+
+                    self.seq.set_topic(self.time_handler, sky_brightness_filters)
+                    
+                    # print("SIMULATOR::TIMESTAMP:: " + str(self.sky_brightnessU.timestamp))
+                    # print("SIMULATOR::SCALE:: " + str(self.sky_brightnessU.scale))
+                    # for i in range(len(self.sky_brightnessU.sky_brightness)):
+                    #     print("SIMULATOR::SKYMAP::U::" + str(i) + " " + str(self.sky_brightnessU.sky_brightness[i]))
+                    
+                    self.sal.put(self.sky_brightnessU)
+                    self.sal.put(self.sky_brightnessG)
+                    self.sal.put(self.sky_brightnessR)
+                    self.sal.put(self.sky_brightnessI)
+                    self.sal.put(self.sky_brightnessZ)
+                    self.sal.put(self.sky_brightnessY)
 
                 self.get_target_from_scheduler()
 
