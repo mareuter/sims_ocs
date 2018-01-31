@@ -269,9 +269,11 @@ class Sequencer(object):
             can iterate through this dictionary and the skymap filters in the 
             same loop. 
         """
-        fields = numpy.arange(1,5293)
-        skymap = self.sky_model.get_sky_brightness(fields, extrapolate=True,
-                                                         override_exclude_planets=False)
+        # Small trick to get the sky brightness maps quickly. Assess the sky_brightness directly with indx=None.
+        # This will just dump the full sky map.
+        skymap = self.sky_model.sky_brightness.returnMags(self.sky_model.date_profile.mjd,
+                                                          indx=None,
+                                                          badval=-1.)
 
         for filter in skymap:
 
