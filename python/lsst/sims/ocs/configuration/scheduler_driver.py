@@ -29,6 +29,9 @@ class SchedulerDriver(pexConfig.Config):
     ignore_airmass = pexConfig.Field('Flag to ignore airmass limits when rejecting targets.', bool)
     ignore_clouds = pexConfig.Field('Flag to ignore cloud limits when rejecting targets.', bool)
     ignore_seeing = pexConfig.Field('Flag to ignore seeing limits when rejecting targets.', bool)
+    lookahead_window_size = pexConfig.Field('Distance into the future the lookahead "looks", 1 unit = 5 minute', int)
+    lookahead_bonus_weight = pexConfig.Field('Adjusts the weight of the lookahead bonus. Higher values '
+                                             'add to fields with limited future visibility', float)
 
     def setDefaults(self):
         """Set defaults for the LSST Scheduler's Driver.
@@ -47,6 +50,8 @@ class SchedulerDriver(pexConfig.Config):
         self.ignore_airmass = False
         self.ignore_clouds = False
         self.ignore_seeing = False
+        self.lookahead_window_size = 8000
+        self.lookahead_bonus_weight = 1.0
 
     def validate(self):
         """Validate configuration parameters.

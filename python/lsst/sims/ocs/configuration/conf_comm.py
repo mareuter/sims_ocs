@@ -65,6 +65,8 @@ class ConfigurationCommunicator(object):
         self.sched_driver_conf.ignore_airmass = self.config.sched_driver.ignore_airmass
         self.sched_driver_conf.ignore_clouds = self.config.sched_driver.ignore_clouds
         self.sched_driver_conf.ignore_seeing = self.config.sched_driver.ignore_seeing
+        self.sched_driver_conf.lookahead_window_size = self.config.sched_driver.lookahead_window_size
+        self.sched_driver_conf.lookahead_bonus_weight = self.config.sched_driver.lookahead_bonus_weight
 
     def _configure_observing_site(self):
         """Configure and send the Observing Site configuration topic.
