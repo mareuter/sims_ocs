@@ -106,9 +106,11 @@ class ConfigurationCommunicator(object):
         self.dome_conf.altitude_maxspeed = self.config.observatory.dome.altitude_maxspeed
         self.dome_conf.altitude_accel = self.config.observatory.dome.altitude_accel
         self.dome_conf.altitude_decel = self.config.observatory.dome.altitude_decel
+        self.dome_conf.altitude_freerange = self.config.observatory.dome.altitude_freerange
         self.dome_conf.azimuth_maxspeed = self.config.observatory.dome.azimuth_maxspeed
         self.dome_conf.azimuth_accel = self.config.observatory.dome.azimuth_accel
         self.dome_conf.azimuth_decel = self.config.observatory.dome.azimuth_decel
+        self.dome_conf.azimuth_freerange = self.config.observatory.dome.azimuth_freerange
         self.dome_conf.settle_time = self.config.observatory.dome.settle_time
 
     def _configure_rotator(self):
