@@ -1,0 +1,4 @@
+[submodule "python/lsst/sims/ocs/environment"]
+	path = python/lsst/sims/ocs/environment
+	url = https://github.com/lsst-sims/environment.git
+	branch = develop

@@ -2,8 +2,8 @@ from builtins import object
 from builtins import range
 import logging
 
-from lsst.sims.ocs.downtime.scheduled_downtime import ScheduledDowntime
-from lsst.sims.ocs.downtime.unscheduled_downtime import UnscheduledDowntime
+from lsst.sims.ocs.environment.scheduled_downtime import ScheduledDowntime
+from lsst.sims.ocs.environment.unscheduled_downtime import UnscheduledDowntime
 from lsst.sims.ocs.setup import LoggingLevel
 
 class DowntimeHandler(object):
