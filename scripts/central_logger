@@ -4,7 +4,7 @@ import argparse
 import logging
 import logging.handlers
 import pickle
-import SocketServer
+import socketserver as SocketServer
 import struct
 
 from lsst.sims.ocs.setup.log import DETAIL_LEVEL, MIN_FILE
