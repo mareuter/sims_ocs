@@ -26,7 +26,7 @@ class FieldTest(unittest.TestCase):
         self.assertEqual(ft.fid, 1)
         self.assertEqual(ft.fov_rad, math.radians(0.5))
         self.assertEqual(ft.ra_rad, math.radians(30.0))
-        self.assertEqual(ft.decl, -30.0)
+        self.assertEqual(ft.dec, -30.0)
         self.assertEqual(ft.gl, -45.0)
         self.assertEqual(ft.gb_rad, math.radians(45.0))
         self.assertEqual(ft.el_rad, math.radians(60.0))
