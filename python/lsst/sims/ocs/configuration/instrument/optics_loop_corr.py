@@ -21,7 +21,7 @@ class OpticsLoopCorr(pexConfig.Config):
         """
         self.tel_optics_ol_slope = 1.0 / 3.5
         self.tel_optics_cl_alt_limit = [0.0, 9.0, 90.0]
-        self.tel_optics_cl_delay = [0.0, 20.0]
+        self.tel_optics_cl_delay = [0.0, 36.0]
 
     def set_array(self, conf, param):
         """Set a DDS topic array parameter.

@@ -80,7 +80,8 @@ class DeepDrillingCosmology1(Sequence):
         self.scheduling.max_num_targets = 100
         self.scheduling.accept_serendipity = False
         self.scheduling.accept_consecutive_visits = True
-        self.scheduling.airmass_bonus = 0.5
+        self.scheduling.airmass_bonus = 0.
+        self.scheduling.hour_angle_bonus = 0.3
 
         # --------------------------
         # Band Filter specifications

@@ -20,7 +20,7 @@ class Rotator(pexConfig.Config):
                                    'rotator was placed in filter change position. If the flag is False, '
                                    'then the rotator is left in the filter change position.', bool)
 
-    # Kinemtatic parameters
+    # Kinematatic parameters
     maxspeed = pexConfig.Field('Maximum speed (units=degrees/second) of rotator movement.', float)
     accel = pexConfig.Field('Maximum acceleration (units=degrees/second**2) of rotator movement.', float)
     decel = pexConfig.Field('Maximum deceleration (units=degrees/second**2) of rotator movement.', float)
@@ -31,8 +31,8 @@ class Rotator(pexConfig.Config):
         self.minpos = -90.0
         self.maxpos = 90.0
         self.filter_change_pos = 0.0
-        self.follow_sky = False
-        self.resume_angle = False
+        self.follow_sky = True
+        self.resume_angle = True
         self.maxspeed = 3.5
         self.accel = 1.0
         self.decel = 1.0

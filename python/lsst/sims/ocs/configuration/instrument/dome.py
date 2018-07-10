@@ -39,5 +39,5 @@ class Dome(pexConfig.Config):
         self.azimuth_maxspeed = 1.5
         self.azimuth_accel = 0.75
         self.azimuth_decel = 0.75
-        self.azimuth_freerange = 0.
-        self.settle_time = 1.0
+        self.azimuth_freerange = 4.
+        self.settle_time = 0.
