@@ -267,7 +267,12 @@ def create_observation_history(metadata):
                          doc="The azimuth (units=degrees) of the sun."),
                   Column("solarElong", Float, nullable=False,
                          doc="The solar elongation (units=degrees) of the observation field (distance "
-                             "between it and sun)."))
+                             "between it and sun)."),
+                  Column("slew_time", Float, nullable=False,
+                         doc="The slew time (units=seconds)."),
+                  Column("note", String(40), nullable=False,
+                         doc="A note about the observations."),
+                  )
 
     Index("o_filter", table.c.filter)
     Index("fk_ObsHistory_Session1", table.c.Session_sessionId)

@@ -405,6 +405,7 @@ class Simulator(object):
                                                            visit_exposure_time,
                                                            observation.airmass)
 
+                observation.note = self.target.note
                 # Pass observation back to scheduler
                 self.log.log(LoggingLevel.EXTENSIVE.value, "tx: observation")
                 if self.no_dds_comm:

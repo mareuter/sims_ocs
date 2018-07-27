@@ -121,7 +121,7 @@ def write_observation_history(data, sid):
         ('observationStartLST', data.observation_start_lst),
         ('night', data.night),
         ('TargetHistory_targetId', data.targetId),
-        ('Field_fieldId', data.fieldId),
+        ('Field_fieldId', -1),
         ('groupId', data.groupId),
         ('ra', data.ra),
         ('dec', data.decl),
@@ -149,7 +149,9 @@ def write_observation_history(data, sid):
         ('sunDec', data.sun_dec),
         ('sunAlt', data.sun_alt),
         ('sunAz', data.sun_az),
-        ('solarElong', data.solar_elong)
+        ('solarElong', data.solar_elong),
+        ('slew_time', data.slew_time),
+        ('note', data.note)
     ])
     return values
 
