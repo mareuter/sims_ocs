@@ -243,7 +243,7 @@ class Simulator(object):
         if not self.no_dds_comm:
             self.sal.initialize()
 
-            self.scheduler_summary_state = self.sal.set_subscribe_logevent("SummaryState")
+            self.scheduler_summary_state = self.sal.set_subscribe_logevent("summaryState")
             self.scheduler_valid_settings = self.sal.set_subscribe_logevent("validSettings")
 
             self.target = self.sal.set_subscribe_logevent("target")
@@ -268,7 +268,7 @@ class Simulator(object):
                 if self.scheduler_summary_state.summaryState == self.summary_state_enum["STANDBY"]:
                     self.log.debug('Listening to valid settings...')
                     self.listen_scheduler_settings()
-                    self.valid_settings = self.scheduler_valid_settings.package_versions.split(',')
+                    self.valid_settings = self.scheduler_valid_settings.packageVersions.split(',')
                     for setting in self.valid_settings:
                         self.log.debug('{}'.format(setting))
 
@@ -726,7 +726,7 @@ class Simulator(object):
 
         lasttime = time.time()
         while self.wait_for_scheduler:
-            rcode = self.sal.manager.getEvent_SummaryState(self.scheduler_summary_state)
+            rcode = self.sal.manager.getEvent_summaryState(self.scheduler_summary_state)
             if rcode == 0:
                 break
             else:
