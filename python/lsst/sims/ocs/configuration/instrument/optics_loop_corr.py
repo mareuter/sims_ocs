@@ -35,14 +35,9 @@ class OpticsLoopCorr(pexConfig.Config):
         param : str
             The name of the topic parameter to fill.
         """
-        print(param)
-
         array = getattr(conf, param)
-
-        print(param)
-
         local_param = getattr(self, param)
-        
+
         for i, v in enumerate(local_param):
             array[i] = v
 
