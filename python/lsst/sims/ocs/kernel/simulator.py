@@ -190,26 +190,26 @@ class Simulator(object):
             The topic instance to gather the observation proposal information from.
         """
         if phtype == "observation":
-            for i in range(topic.num_proposals):
+            for i in range(topic.numProposals):
                 self.db.append_data("observation_proposal_history",
                                     ObsProposalHistory(self.observation_proposals_counted,
-                                                       int(topic.proposal_Ids[i]),
-                                                       topic.proposal_values[i],
-                                                       topic.proposal_needs[i],
-                                                       topic.proposal_bonuses[i],
-                                                       topic.proposal_boosts[i],
+                                                       int(topic.proposalIds[i]),
+                                                       topic.proposalValues[i],
+                                                       topic.proposalNeeds[i],
+                                                       topic.proposalBonuses[i],
+                                                       topic.proposalBoosts[i],
                                                        topic.observationId))
                 self.observation_proposals_counted += 1
         if phtype == "target":
-            for i in range(topic.num_proposals):
+            for i in range(topic.numProposals):
                 self.db.append_data("target_proposal_history",
                                     TargetProposalHistory(self.target_proposals_counted,
-                                                          int(topic.proposal_id[i]),
+                                                          int(topic.proposalId[i]),
                                                           -1,
                                                           -1,
                                                           -1,
                                                           -1,
-                                                          topic.target_id))
+                                                          topic.targetId))
                 self.target_proposals_counted += 1
 
     def get_target_from_scheduler(self):
@@ -225,7 +225,7 @@ class Simulator(object):
             lasttime = time.time()
             while self.wait_for_scheduler:
                 rcode = self.sal.manager.getEvent_target(self.target)
-                if rcode == 0 and self.target.num_exposures != 0:
+                if rcode == 0 and self.target.numExposures != 0:
                     break
                 else:
                     tf = time.time()
@@ -409,19 +409,19 @@ class Simulator(object):
                                                                                 self.time_handler)
                 # Add a few more things to the observation
                 observation.night = night
-                elapsed_time = self.time_handler.time_since_given(observation.observation_start_time)
+                elapsed_time = self.time_handler.time_since_given(observation.observationStartTime)
                 observation.cloud = self.cloud_interface.get_cloud(elapsed_time)
                 seeing_values = self.seeing_interface.calculate_seeing(elapsed_time, observation.filter,
                                                                    observation.airmass)
-                observation.seeing_fwhm_500 = seeing_values[0]
-                observation.seeing_fwhm_geom = seeing_values[1]
-                observation.seeing_fwhm_eff = seeing_values[2]
+                observation.seeingFwhm500 = seeing_values[0]
+                observation.seeingFwhmGeom = seeing_values[1]
+                observation.seeingFwhmEff = seeing_values[2]
 
-                visit_exposure_time = sum([observation.exposure_times[i]
-                                           for i in range(observation.num_exposures)])
-                observation.five_sigma_depth = m5_flat_sed(observation.filter,
-                                                           observation.sky_brightness,
-                                                           observation.seeing_fwhm_eff,
+                visit_exposure_time = sum([observation.exposureTimes[i]
+                                           for i in range(observation.numExposures)])
+                observation.fiveSigmaDepth = m5_flat_sed(observation.filter,
+                                                           observation.skyBrightness,
+                                                           observation.seeingFwhmEff,
                                                            visit_exposure_time,
                                                            observation.airmass)
 
@@ -446,7 +446,7 @@ class Simulator(object):
                     lastconfigtime = time.time()
                     while self.wait_for_scheduler:
                         rcode = self.sal.manager.getNextSample_interestedProposal(self.interested_proposal)
-                        if rcode == 0 and self.interested_proposal.num_proposals >= 0:
+                        if rcode == 0 and self.interested_proposal.numProposals >= 0:
                             self.log.log(LoggingLevel.EXTENSIVE.value, "Received interested proposal.")
                             break
                         else:
@@ -543,7 +543,7 @@ class Simulator(object):
             lastconfigtime = time.time()
             while self.wait_for_scheduler:
                 rcode = self.sal.manager.getEvent_needFilterSwap(self.filter_swap)
-                if rcode == 0 and self.filter_swap.filter_to_unmount != '':
+                if rcode == 0 and self.filter_swap.filterToUnmount != '':
                     break
                 else:
                     tf = time.time()
@@ -607,8 +607,8 @@ class Simulator(object):
             delta = math.fabs(self.time_handler.current_timestamp - self.end_of_night) + SECONDS_IN_MINUTE
             self.time_handler.update_time(delta, "seconds")
         elif not self.no_dds_comm:
-            self.comm_time.is_down = False
-            self.comm_time.down_duration = down_days
+            self.comm_time.isDown = False
+            self.comm_time.downDuration = down_days
 
     def write_proposal_fields(self, prop_fields):
         """Transform the proposal field information and write to the survey database.

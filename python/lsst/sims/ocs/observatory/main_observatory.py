@@ -102,12 +102,12 @@ class MainObservatory(object):
         shutter_time = 2.0 * (0.5 * camera_config.shutter_time)
 
         visit_time = 0.0
-        for i in range(target.num_exposures):
+        for i in range(target.numExposures):
             self.exposures_made += 1
-            effective_exposure_time = target.exposure_times[i]
+            effective_exposure_time = target.exposureTimes[i]
             self.target_exposure_list.append(TargetExposure(self.exposures_made, i + 1,
                                                             effective_exposure_time,
-                                                            target.target_id))
+                                                            target.targetId))
 
             exposure_start_time = th.future_timestamp(visit_time, "seconds")
             visit_time += (shutter_time + effective_exposure_time)
@@ -116,7 +116,7 @@ class MainObservatory(object):
                                                               effective_exposure_time,
                                                               exposure_start_time, self.observations_made))
 
-            if i < (target.num_exposures - 1):
+            if i < (target.numExposures - 1):
                 visit_time += camera_config.readout_time
 
         return (visit_time, "seconds")
@@ -197,38 +197,38 @@ class MainObservatory(object):
 
         self.log.log(LoggingLevel.EXTENSIVE.value,
                      "Starting observation {} for target {}.".format(self.observations_made,
-                                                                     target.target_id))
+                                                                     target.targetId))
 
         slew_time = self.slew(target)
         time_handler.update_time(*slew_time)
 
         observation.observationId = self.observations_made
-        observation.observation_start_time = time_handler.current_timestamp
-        start_mjd, start_lst = self.date_profile(observation.observation_start_time)
-        observation.observation_start_mjd = start_mjd
-        observation.observation_start_lst = math.degrees(start_lst)
-        observation.targetId = target.target_id
-        observation.num_proposals = target.num_proposals
-        for i in range(observation.num_proposals):
-            observation.proposal_Ids[i] = target.proposal_id[i]
+        observation.observationStartTime = time_handler.current_timestamp
+        start_mjd, start_lst = self.date_profile(observation.observationStartTime)
+        observation.observationStartMjd = start_mjd
+        observation.observationStartLst = math.degrees(start_lst)
+        observation.targetId = target.targetId
+        observation.numProposals = target.numProposals
+        for i in range(observation.numProposals):
+            observation.proposalIds[i] = target.proposalId[i]
         # observation.fieldId = target.fieldId
         # observation.groupId = target.groupId
         observation.filter = target.filter
         observation.ra = target.ra
         observation.decl = target.decl
-        observation.angle = target.sky_angle
-        observation.num_exposures = target.num_exposures
-        observation.slew_time = slew_time[0]
+        observation.angle = target.skyAngle
+        observation.numExposures = target.numExposures
+        observation.slewTime = slew_time[0]
 
         self.log.log(LoggingLevel.EXTENSIVE.value,
-                     "Exposure Times for Target {}: {}".format(target.target_id, list(target.exposure_times)))
+                     "Exposure Times for Target {}: {}".format(target.targetId, list(target.exposureTimes)))
         visit_time = self.calculate_visit_time(target, time_handler)
         self.log.log(LoggingLevel.EXTENSIVE.value,
-                     "Visit Time for Target {}: {}".format(target.target_id, visit_time[0]))
+                     "Visit Time for Target {}: {}".format(target.targetId, visit_time[0]))
 
-        observation.visit_time = visit_time[0]
+        observation.visitTime = visit_time[0]
         for i, exposure in enumerate(self.observation_exposure_list):
-            observation.exposure_times[i] = int(exposure.exposureTime)
+            observation.exposureTimes[i] = int(exposure.exposureTime)
 
         time_handler.update_time(*visit_time)
 

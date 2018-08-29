@@ -91,22 +91,22 @@ class Sequencer(object):
         obs_current_state = self.observatory_model.current_state
 
         self.observatory_state.timestamp = timestamp
-        self.observatory_state.pointing_ra = obs_current_state.ra
-        self.observatory_state.pointing_dec = obs_current_state.dec
-        self.observatory_state.pointing_angle = obs_current_state.ang
-        self.observatory_state.pointing_altitude = obs_current_state.alt
-        self.observatory_state.pointing_azimuth = obs_current_state.az
-        self.observatory_state.pointing_pa = obs_current_state.pa
-        self.observatory_state.pointing_rot = obs_current_state.rot
+        self.observatory_state.pointingRa = obs_current_state.ra
+        self.observatory_state.pointingDec = obs_current_state.dec
+        self.observatory_state.pointingAngle = obs_current_state.ang
+        self.observatory_state.pointingAltitude = obs_current_state.alt
+        self.observatory_state.pointingAzimuth = obs_current_state.az
+        self.observatory_state.pointingPa = obs_current_state.pa
+        self.observatory_state.pointingRot = obs_current_state.rot
         self.observatory_state.tracking = obs_current_state.tracking
-        self.observatory_state.telescope_altitude = obs_current_state.telalt
-        self.observatory_state.telescope_azimuth = obs_current_state.telaz
-        self.observatory_state.telescope_rotator = obs_current_state.telrot
-        self.observatory_state.dome_altitude = obs_current_state.domalt
-        self.observatory_state.dome_azimuth = obs_current_state.domaz
-        self.observatory_state.filter_position = obs_current_state.filter
-        self.observatory_state.filter_mounted = ",".join(obs_current_state.mountedfilters)
-        self.observatory_state.filter_unmounted = ','.join(obs_current_state.unmountedfilters)
+        self.observatory_state.telescopeAltitude = obs_current_state.telalt
+        self.observatory_state.telescopeAzimuth = obs_current_state.telaz
+        self.observatory_state.telescopeRotator = obs_current_state.telrot
+        self.observatory_state.domeAltitude = obs_current_state.domalt
+        self.observatory_state.domeAzimuth = obs_current_state.domaz
+        self.observatory_state.filterPosition = obs_current_state.filter
+        self.observatory_state.filterMounted = ",".join(obs_current_state.mountedfilters)
+        self.observatory_state.filterUnmounted = ','.join(obs_current_state.unmountedfilters)
 
         return self.observatory_state
 
@@ -171,15 +171,15 @@ class Sequencer(object):
         dict(list[:class:`.TargetExposure`], list[:class:`.ObsExposure`])
             A dictionary of all the exposure information from the visit.
         """
-        if target.target_id != -1:
-            self.log.log(LoggingLevel.EXTENSIVE.value, "Received target {}".format(target.target_id))
+        if target.targetId != -1:
+            self.log.log(LoggingLevel.EXTENSIVE.value, "Received target {}".format(target.targetId))
             self.targets_received += 1
 
-            self.sky_model.update(target.request_time)
-            target.request_mjd = self.sky_model.date_profile.mjd
+            self.sky_model.update(target.requestTime)
+            target.requestMjd = self.sky_model.date_profile.mjd
 
             slew_info, exposure_info = self.observatory_model.observe(th, target, self.observation)
-            self.sky_model.update(self.observation.observation_start_time)
+            self.sky_model.update(self.observation.observationStartTime)
 
             nra = numpy.radians(numpy.array([self.observation.ra]))
             ndec = numpy.radians(numpy.array([self.observation.decl]))
@@ -189,37 +189,37 @@ class Sequencer(object):
             attrs = self.sky_model.get_target_information(nra, ndec)
             msi = self.sky_model.get_moon_sun_info(nra, ndec)
 
-            self.observation.sky_brightness = sky_mags[self.observation.filter][0]
+            self.observation.skyBrightness = sky_mags[self.observation.filter][0]
             self.observation.airmass = attrs["airmass"][0]
             self.observation.altitude = numpy.degrees(attrs["altitude"][0])
             self.observation.azimuth = numpy.degrees(attrs["azimuth"][0])
-            self.observation.moon_ra = numpy.degrees(msi["moonRA"])
-            self.observation.moon_dec = numpy.degrees(msi["moonDec"])
-            self.observation.moon_alt = numpy.degrees(msi["moonAlt"][0])
-            self.observation.moon_az = numpy.degrees(msi["moonAz"][0])
-            self.observation.moon_phase = msi["moonPhase"]
-            self.observation.moon_distance = numpy.degrees(msi["moonDist"][0])
-            self.observation.sun_alt = numpy.degrees(msi["sunAlt"][0])
-            self.observation.sun_az = numpy.degrees(msi["sunAz"][0])
-            self.observation.sun_ra = numpy.degrees(msi["sunRA"])
-            self.observation.sun_dec = numpy.degrees(msi["sunDec"])
-            self.observation.solar_elong = numpy.degrees(msi["solarElong"][0])
+            self.observation.moonRa = numpy.degrees(msi["moonRA"])
+            self.observation.moonDec = numpy.degrees(msi["moonDec"])
+            self.observation.moonAlt = numpy.degrees(msi["moonAlt"][0])
+            self.observation.moonAz = numpy.degrees(msi["moonAz"][0])
+            self.observation.moonPhase = msi["moonPhase"]
+            self.observation.moonDistance = numpy.degrees(msi["moonDist"][0])
+            self.observation.sunAlt = numpy.degrees(msi["sunAlt"][0])
+            self.observation.sunAz = numpy.degrees(msi["sunAz"][0])
+            self.observation.sunRa = numpy.degrees(msi["sunRA"])
+            self.observation.sunDec = numpy.degrees(msi["sunDec"])
+            self.observation.solarElong = numpy.degrees(msi["solarElong"][0])
         else:
             self.log.log(LoggingLevel.EXTENSIVE.value, "No target received!")
-            self.observation.observationId = target.target_id
-            self.observation.targetId = target.target_id
+            self.observation.observationId = target.targetId
+            self.observation.targetId = target.targetId
             if target.filter == '':
                 self.observation.filter = 'z'
             # if target.seeing == 0.0:
-            self.observation.seeing_fwhm_eff = 0.1
-            if sum(target.exposure_times) == 0.0:
-                for i in range(target.num_exposures):
-                    self.observation.exposure_times[i] = 15
-                self.observation.num_exposures = 1
+            self.observation.seeingFwhmEff = 0.1
+            if sum(target.exposureTimes) == 0.0:
+                for i in range(target.numExposures):
+                    self.observation.exposureTimes[i] = 15
+                self.observation.numExposures = 1
             # if target.airmass == 0.0:
             self.observation.airmass = 1.0
             # if target.sky_brightness == 0.0:
-            self.observation.sky_brightness = 30.0
+            self.observation.skyBrightness = 30.0
             slew_info = None
             exposure_info = None
             th.update_time(*self.idle_delay)
@@ -244,8 +244,8 @@ class Sequencer(object):
         filter_swap : scheduler_filterSwapC
             The instance of the filter swap information.
         """
-        if filter_swap.need_swap:
-            self.observatory_model.swap_filter(filter_swap.filter_to_unmount)
+        if filter_swap.needSwap:
+            self.observatory_model.swap_filter(filter_swap.filterToUnmount)
 
     def start_night(self, night, duration):
         """Perform start of night functions.
