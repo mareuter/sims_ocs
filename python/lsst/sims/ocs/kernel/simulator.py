@@ -329,9 +329,27 @@ class Simulator(object):
         """
         self.log.info("Starting simulation")
 
+        start_night = 1
         if self.no_dds_comm:
             self.scheduler_state = self.summary_state_enum['ENABLE']  # set scheduler state to enable...
             self.configure_driver()
+            # Taking COLD/WARM start into consideration
+            if self.driver.night > 0:
+                # Not sure I actually need to do this... But I think I do need to wal the timestamp over each night
+                for night in range(self.driver.night):
+                    self.start_night(night+1)
+                    self.driver.update_time(self.time_handler.current_timestamp, night+1)
+                    self.driver.start_night(self.time_handler.current_timestamp, night+1)
+                    self.log.debug("Timestamp: %.6f", self.time_handler.current_timestamp)
+                    delta_t = self.end_of_night - self.time_handler.current_timestamp + 60.
+                    self.log.debug("End of night: %.6f (delta_t = %.2f)", self.end_of_night, delta_t)
+                    self.time_handler.update_time(delta_t,
+                                                  'seconds')
+                    self.log.debug("Timestamp: %.6f", self.time_handler.current_timestamp)
+                    self.end_night()
+                    self.start_day()
+                    start_night += 1
+        # TODO: Implement COLD/WARM start in dds mode...
         # else:
         #     self.conf_comm.run()
 
@@ -339,8 +357,10 @@ class Simulator(object):
         self.save_proposal_information()
         self.save_field_information()
 
+        # Note that if you are cold starting and the duration is smaller than the cold start database, you won't
+        # run any simulation.
         self.log.debug("Duration = {}".format(self.duration))
-        for night in range(1, int(self.duration) + 1):
+        for night in range(start_night, int(self.duration) + 1):
             self.start_night(night)
             if self.no_dds_comm:
                 self.driver.update_time(self.time_handler.current_timestamp, night)
@@ -406,10 +426,15 @@ class Simulator(object):
                                                            observation.airmass)
 
                 observation.note = self.target.note
-                # Pass observation back to scheduler
+                observation.num_proposals = self.target.num_proposals
+                for i in range(self.target.num_proposals):
+                    observation.proposal_Ids[i] = self.target.proposal_id[i]
                 self.log.log(LoggingLevel.EXTENSIVE.value, "tx: observation")
                 if self.no_dds_comm:
                     driver_observation = SALUtils.rtopic_observation(observation)
+                    self.log.debug('%i: %s', observation.num_proposals, observation.proposal_Ids)
+                    self.log.debug('%i: %s', driver_observation.num_props,
+                                   driver_observation.propid_list)
                     target_list = self.driver.register_observation(driver_observation)
                     SALUtils.wtopic_interestedProposal(self.interested_proposal,
                                                        observation.targetId,
@@ -540,12 +565,18 @@ class Simulator(object):
         self.seq.start_night(night, self.duration)
         self.comm_time.night = night
 
+        self.log.debug("Timestamp: %.6f", self.time_handler.current_timestamp)
+
         self.seq.sky_model.update(self.time_handler.current_timestamp)
         (set_timestamp,
          rise_timestamp) = self.seq.sky_model.get_night_boundaries(self.conf.sched_driver.night_boundary)
 
+        self.log.debug("Set timestamp: %.6f", set_timestamp)
+        self.log.debug("Rise timestamp: %.6f", rise_timestamp)
+
         delta = set_timestamp - self.time_handler.current_timestamp
         self.time_handler.update_time(delta, "seconds")
+        self.log.debug("Timestamp: %.6f", self.time_handler.current_timestamp)
 
         self.log.debug("Start of night {} at {}".format(night, self.time_handler.current_timestring))
 
