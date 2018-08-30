@@ -426,13 +426,13 @@ class Simulator(object):
                                                            observation.airmass)
 
                 observation.note = self.target.note
-                observation.num_proposals = self.target.num_proposals
-                for i in range(self.target.num_proposals):
-                    observation.proposal_Ids[i] = self.target.proposal_id[i]
+                observation.numProposals = self.target.numProposals
+                for i in range(self.target.numProposals):
+                    observation.proposalIds[i] = self.target.proposalId[i]
                 self.log.log(LoggingLevel.EXTENSIVE.value, "tx: observation")
                 if self.no_dds_comm:
                     driver_observation = SALUtils.rtopic_observation(observation)
-                    self.log.debug('%i: %s', observation.num_proposals, observation.proposal_Ids)
+                    self.log.debug('%i: %s', observation.numProposals, observation.proposalIds)
                     self.log.debug('%i: %s', driver_observation.num_props,
                                    driver_observation.propid_list)
                     target_list = self.driver.register_observation(driver_observation)
