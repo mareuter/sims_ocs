@@ -390,10 +390,11 @@ class Simulator(object):
                              "Observatory State: {}".format(topic_strdict(observatory_state)))
                 if self.no_dds_comm:
                     self.driver.update_time(self.time_handler.current_timestamp, night)
-                    self.driver.update_internal_conditions(observatory_state, night)
-                    self.cloud.bulk_cloud = self.cloud_interface.get_cloud(self.time_handler.time_since_start)
+                    driver_observatory_state = SALUtils.rtopic_observatory_state(observatory_state)
+                    self.driver.update_internal_conditions(driver_observatory_state, night)
+                    self.cloud.bulkCloud = self.cloud_interface.get_cloud(self.time_handler.time_since_start)
                     self.seeing.seeing = self.seeing_interface.get_seeing(self.time_handler.time_since_start)
-                    self.driver.update_external_conditions(self.cloud.bulk_cloud, self.seeing.seeing)
+                    self.driver.update_external_conditions(self.cloud.bulkCloud, self.seeing.seeing)
                 else:
                     self.sal.put(observatory_state)
 

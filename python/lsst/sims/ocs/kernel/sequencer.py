@@ -124,9 +124,10 @@ class Sequencer(object):
         """
         if self.no_dds:
             from SALPY_scheduler import scheduler_observationC
+            from SALPY_scheduler import scheduler_observatoryStateC
             self.observation = scheduler_observationC()
             self.observatory_model.configure(obs_config)
-            self.observatory_state = self.observatory_model.current_state
+            self.observatory_state = scheduler_observatoryStateC()
         else:
             self.observation = sal.set_publish_topic("observation")
             self.observatory_state = sal.set_publish_topic("observatoryState")
