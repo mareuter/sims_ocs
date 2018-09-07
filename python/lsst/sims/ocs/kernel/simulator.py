@@ -538,7 +538,9 @@ class Simulator(object):
                      "Daytime Timestamp sent: {:.6f}".format(self.time_handler.current_timestamp))
 
         if self.no_dds_comm:
-            self.filter_swap = FilterSwap(*self.driver.get_need_filter_swap())
+            filter_swap = self.driver.get_need_filter_swap()
+            self.filter_swap.needSwap = filter_swap[0]
+            self.filter_swap.filterToUnmount = filter_swap[1]
         else:
             self.filter_swap = self.sal.set_subscribe_logevent("needFilterSwap")
             lastconfigtime = time.time()
